@@ -14,7 +14,7 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <li class="breadcrumb-item"><a href="/category">Category</a></li>
-                        <li class="breadcrumb-item active">Add Category</li>
+                        <li class="breadcrumb-item active">Edit Category</li>
                     </ol>
                 </div>
             </div>
@@ -28,20 +28,20 @@
                 <div class="col-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                          <h3 class="card-title">Form input category</h3>
+                          <h3 class="card-title">Form edit category</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="/category/create" method="post">
+                        <form action="/category/update/<%= category._id %>?_method=PUT" method="post">
                           <div class="card-body">
                             <div class="form-group">
                               <label for="categoryName">Category Name</label>
-                              <input type="text" class="form-control" name="categoryName" id="categoryName" placeholder="Enter Category Name" required />
+                              <input type="text" class="form-control" name="categoryName" id="categoryName" placeholder="Enter Category Name" required value="<%= category.name %>" />
                             </div>
                           </div>
                           <!-- /.card-body -->
                           <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Update!</button>
                           </div>
                         </form>
                       </div>

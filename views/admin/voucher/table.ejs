@@ -1,0 +1,69 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Voucher Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Image</th>
+            <th width="28%" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let i = 0; i < voucher.length; i++){ %>
+            <tr>
+                <td><%= i + 1 %></td>
+                <td><%= voucher[i]?.name ?? '-' %></td>
+                <td><%= voucher[i]?.category?.name ?? '-' %></td>
+                <td>
+                    <% voucher[i].prices.forEach(price => { %>
+                        <span class="badge badge-primary"><%= price.coinName %> - <%= price.coinQuantity %></span>
+                    <% }) %>
+                </td>
+                <td>
+                    <% if(voucher[i].status === 'Y'){ %>
+                        <span class="badge badge-success">Active</span>
+                    <% }else { %>
+                        <span class="badge badge-danger">Deactive</span>
+                    <%} %>
+                </td>
+                <td>
+                    <img src="/uploads/<%= voucher[i].thumbnail%>" alt="<%= voucher[i].thumbnail%>" width="100" />
+                </td>
+                <td>
+                    <form action="/voucher/status/<%= voucher[i]._id %>?_method=PUT" method="post" style="display: inline-block;">
+                        <% if(voucher[i].status === 'Y'){ %>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fa fa-times"></i> Deactive
+                            </button>
+                        <% }else { %>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fa fa-check"></i> Actived
+                            </button>
+                        <%} %>
+                    </form>
+                    <a href="/voucher/edit/<%= voucher[i]._id %>" class="btn btn-success btn-sm">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                    <form style="display: inline-block;" action="/voucher/delete/<%= voucher[i]._id %>?_method=DELETE" method="post">
+                        <button class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Voucher Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Image</th>
+            <th width="20%" class="text-center">Action</th>
+        </tr>
+    </tfoot>
+</table>

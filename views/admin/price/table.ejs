@@ -1,0 +1,40 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Coin Name</th>
+            <th>Coin Quantity</th>
+            <th>Price</th>
+            <th width="25%" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let i = 0; i < price.length; i++){ %>
+            <tr>
+                <td><%= i + 1 %></td>
+                <td><%= price[i].coinName %></td>
+                <td><%= price[i].coinQuantity %></td>
+                <td><%= price[i].price %></td>
+                <td>
+                    <form action="/price/delete/<%= price[i]._id %>?_method=DELETE" method="post">
+                        <a href="/price/edit/<%= price[i]._id %>" class="btn btn-success">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Coin Name</th>
+            <th>Coin Quantity</th>
+            <th>Price</th>
+            <th width="20%" class="text-center">Action</th>
+        </tr>
+    </tfoot>
+</table>

@@ -1,4 +1,4 @@
-const Category = require('./model');
+const Price = require('./model');
 
 module.exports = {
     index: async(req, res) => {
@@ -6,89 +6,90 @@ module.exports = {
             const alertMessage = req.flash("alertMessage");
             const alertStatus = req.flash("alertStatus");
             const alert = { message: alertMessage, status: alertStatus };
-            let category = await Category.find();
-            console.log(category);
-            res.render('admin/category/view_category',{
-                category,
+            let price = await Price.find();
+            res.render('admin/price/view_price',{
+                price,
                 alert
             });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/category');
+            res.redirect('/price');
         }
     },
     create: async(req, res) => {
         try{
-            res.render('admin/category/create')
+            res.render('admin/price/create')
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/category');
+            res.redirect('/price');
         }
     },
     actionCreate: async(req, res) => {
         try{
-            const { categoryName } = req.body;
-            let category = await Category({ name: categoryName });
-            await category.save();
+            const { coinName, coinQuantity, price } = req.body;
+            let priceAction = await Price({ coinQuantity, coinName, price });
+            await priceAction.save();
 
-            req.flash('alertMessage', 'Category has been added');
+            req.flash('alertMessage', 'Price has been added');
             req.flash('alertStatus', 'success');
 
-            res.redirect('/category');
+            res.redirect('/price');
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/category');
+            res.redirect('/price');
         }
     },
     actionEdit: async(req, res) => {
         try{
             const { id } = req.params;
-            let category = await Category.findOne({ _id: id });
-            res.render('admin/category/edit',{
-                category
+            let priceData = await Price.findOne({ _id: id });
+            res.render('admin/price/edit',{
+                priceData
             });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/category');
+            res.redirect('/price');
         }
     },
     actionUpdate: async(req, res) => {
         try{
             const { id } = req.params;
-            const { categoryName } = req.body;
-            await Category.findOneAndUpdate({
+            const { coinName, coinQuantity, price } = req.body;
+            await Price.findOneAndUpdate({
                 _id: id
             },{
-                name: categoryName
+                coinQuantity: coinQuantity,
+                coinName: coinName,
+                price: price
             });
 
-            req.flash('alertMessage', 'Category has been updated');
+            req.flash('alertMessage', 'Price has been updated');
             req.flash('alertStatus', 'success');
 
-            res.redirect('/category');
+            res.redirect('/price');
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/category');
+            res.redirect('/price');
         }
     },
     actionDelete: async(req, res) => {
         try{
             const { id } = req.params;
-            await Category.findOneAndRemove({ _id: id });
+            await Price.findOneAndRemove({ _id: id });
 
-            req.flash('alertMessage', 'Category has been deleted');
+            req.flash('alertMessage', 'Price has been deleted');
             req.flash('alertStatus', 'success');
             
-            res.redirect('/category');
+            res.redirect('/price');
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/category');
+            res.redirect('/price');
         }
     }
 }

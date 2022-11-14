@@ -5,7 +5,7 @@
             <th>Payment Type</th>
             <th>Banks</th>
             <th>Status</th>
-            <th width="25%" class="text-center">Action</th>
+            <th width="28%" class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -28,11 +28,22 @@
                     <%} %>
                 </td>
                 <td>
-                    <form action="/payment/delete/<%= payment[i]._id %>?_method=DELETE" method="post">
-                        <a href="/payment/edit/<%= payment[i]._id %>" class="btn btn-success">
-                            <i class="fa fa-edit"></i> Edit
-                        </a>
-                        <button class="btn btn-danger">
+                    <form action="/payment/status/<%= payment[i]._id %>?_method=PUT" method="post" style="display: inline-block;">
+                        <% if(payment[i].status === 'Y'){ %>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fa fa-times"></i> Deactive
+                            </button>
+                        <% }else { %>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fa fa-check"></i> Actived
+                            </button>
+                        <%} %>
+                    </form>
+                    <a href="/payment/edit/<%= payment[i]._id %>" class="btn btn-success btn-sm">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                    <form style="display: inline-block;" action="/payment/delete/<%= payment[i]._id %>?_method=DELETE" method="post">
+                        <button class="btn btn-danger btn-sm">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </form>
@@ -46,7 +57,7 @@
             <th>Payment Type</th>
             <th>Banks</th>
             <th>Status</th>
-            <th width="20%" class="text-center">Action</th>
+            <th width="28%" class="text-center">Action</th>
         </tr>
     </tfoot>
 </table>

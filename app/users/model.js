@@ -27,6 +27,6 @@ let userSchema = mongoose.Schema({
         type: String,
         require: [true, 'Phone Number not be empty!!']
     }
-}, { timestamps: true});
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

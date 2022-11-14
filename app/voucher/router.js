@@ -4,7 +4,9 @@ const multer = require('multer');
 const os = require('os');
 
 const { index, create, actionCreate, actionEdit, actionUpdate, actionDelete, actionStatus } = require('./controller');
+const { isLoginAdmin } = require('../middleware/auth');
 
+router.use(isLoginAdmin);
 /* GET home page. */
 router.get('/', index);
 router.get('/create', create);

@@ -9,7 +9,9 @@ module.exports = {
             let price = await Price.find();
             res.render('admin/price/view_price',{
                 price,
-                alert
+                alert,
+                name: req.session.user.name,
+                title: 'Price Page'
             });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
@@ -19,7 +21,10 @@ module.exports = {
     },
     create: async(req, res) => {
         try{
-            res.render('admin/price/create')
+            res.render('admin/price/create', {
+                name: req.session.user.name,
+                title: 'Create Price Page'
+            });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
@@ -47,7 +52,9 @@ module.exports = {
             const { id } = req.params;
             let priceData = await Price.findOne({ _id: id });
             res.render('admin/price/edit',{
-                priceData
+                priceData,
+                name: req.session.user.name,
+                title: 'Edit Price Page'
             });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);

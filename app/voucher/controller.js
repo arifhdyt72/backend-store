@@ -16,7 +16,9 @@ module.exports = {
             console.log(voucher);
             res.render('admin/voucher/view_voucher',{
                 voucher,
-                alert
+                alert,
+                name: req.session.user.name,
+                title: 'Voucher Page'
             });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
@@ -28,7 +30,12 @@ module.exports = {
         try{
             const price = await Price.find();
             const category = await Category.find();
-            res.render('admin/voucher/create',{ category, price });
+            res.render('admin/voucher/create',{
+                category,
+                price,
+                name: req.session.user.name,
+                title: 'Create Voucher Page'
+            });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
@@ -102,7 +109,9 @@ module.exports = {
             res.render('admin/voucher/edit',{
                 voucher,
                 price,
-                category
+                category,
+                name: req.session.user.name,
+                title: 'Edit Voucher Page'
             });
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
@@ -192,7 +201,6 @@ module.exports = {
             res.redirect('/voucher');
         }
     },
-
     actionStatus: async(req, res) => {
         try{
             const { id } = req.params;

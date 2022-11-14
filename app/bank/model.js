@@ -13,6 +13,6 @@ let bankSchema = mongoose.Schema({
         type: String,
         require: [true, 'Bank Name not be empty!']
     }
-});
+}, { timestamps: true});
 
 module.exports = mongoose.model('Bank', bankSchema);

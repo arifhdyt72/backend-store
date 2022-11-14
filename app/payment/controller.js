@@ -7,7 +7,7 @@ module.exports = {
             const alertMessage = req.flash("alertMessage");
             const alertStatus = req.flash("alertStatus");
             const alert = { message: alertMessage, status: alertStatus };
-            let payment = await Payment.find();
+            let payment = await Payment.find().populate('banks');
             res.render('admin/payment/view_payment',{
                 payment,
                 alert
@@ -44,54 +44,55 @@ module.exports = {
             res.redirect('/payment');
         }
     },
-    // actionEdit: async(req, res) => {
-    //     try{
-    //         const { id } = req.params;
-    //         let priceData = await Price.findOne({ _id: id });
-    //         res.render('admin/price/edit',{
-    //             priceData
-    //         });
-    //     }catch(err){
-    //         req.flash('alertMessage', `${err.message}`);
-    //         req.flash('alertStatus', 'danger');
-    //         res.redirect('/price');
-    //     }
-    // },
-    // actionUpdate: async(req, res) => {
-    //     try{
-    //         const { id } = req.params;
-    //         const { coinName, coinQuantity, price } = req.body;
-    //         await Price.findOneAndUpdate({
-    //             _id: id
-    //         },{
-    //             coinQuantity: coinQuantity,
-    //             coinName: coinName,
-    //             price: price
-    //         });
+    actionEdit: async(req, res) => {
+        try{
+            const { id } = req.params;
+            let payment = await Payment.findOne({ _id: id }).populate('banks');
+            let banks = await Bank.find();
+            res.render('admin/payment/edit',{
+                payment,
+                banks
+            });
+        }catch(err){
+            req.flash('alertMessage', `${err.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/payment');
+        }
+    },
+    actionUpdate: async(req, res) => {
+        try{
+            const { id } = req.params;
+            const { banks, type } = req.body;
+            await Payment.findOneAndUpdate({
+                _id: id
+            },{
+                banks,
+                type
+            });
 
-    //         req.flash('alertMessage', 'Price has been updated');
-    //         req.flash('alertStatus', 'success');
+            req.flash('alertMessage', 'Payment Type has been updated');
+            req.flash('alertStatus', 'success');
 
-    //         res.redirect('/price');
-    //     }catch(err){
-    //         req.flash('alertMessage', `${err.message}`);
-    //         req.flash('alertStatus', 'danger');
-    //         res.redirect('/price');
-    //     }
-    // },
-    // actionDelete: async(req, res) => {
-    //     try{
-    //         const { id } = req.params;
-    //         await Price.findOneAndRemove({ _id: id });
+            res.redirect('/payment');
+        }catch(err){
+            req.flash('alertMessage', `${err.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/payment');
+        }
+    },
+    actionDelete: async(req, res) => {
+        try{
+            const { id } = req.params;
+            await Payment.findOneAndRemove({ _id: id });
 
-    //         req.flash('alertMessage', 'Price has been deleted');
-    //         req.flash('alertStatus', 'success');
+            req.flash('alertMessage', 'Payment Type has been deleted');
+            req.flash('alertStatus', 'success');
             
-    //         res.redirect('/price');
-    //     }catch(err){
-    //         req.flash('alertMessage', `${err.message}`);
-    //         req.flash('alertStatus', 'danger');
-    //         res.redirect('/price');
-    //     }
-    // }
+            res.redirect('/payment');
+        }catch(err){
+            req.flash('alertMessage', `${err.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/payment');
+        }
+    }
 }

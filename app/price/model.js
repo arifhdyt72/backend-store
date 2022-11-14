@@ -13,6 +13,6 @@ let priceSchema = mongoose.Schema({
         type: Number,
         default: 0
     }
-});
+}, { timestamps: true} );
 
 module.exports = mongoose.model('Price', priceSchema);

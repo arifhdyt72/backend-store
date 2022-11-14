@@ -1,0 +1,52 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Payment Type</th>
+            <th>Banks</th>
+            <th>Status</th>
+            <th width="25%" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let i = 0; i < payment.length; i++){ %>
+            <tr>
+                <td><%= i + 1 %></td>
+                <td><%= payment[i].type %></td>
+                <td>
+                    <% payment[i].banks.forEach(bank => { %>
+                        <span class="badge badge-primary">
+                            <%= bank.name %> - <%= bank.bankName %> - <%= bank.accountNumber %>
+                        </span>
+                    <% }) %>
+                </td>
+                <td>
+                    <% if(payment[i].status === 'Y'){ %>
+                        <span class="badge badge-success">Active</span>
+                    <% }else { %>
+                        <span class="badge badge-danger">Deactive</span>
+                    <%} %>
+                </td>
+                <td>
+                    <form action="/payment/delete/<%= payment[i]._id %>?_method=DELETE" method="post">
+                        <a href="/payment/edit/<%= payment[i]._id %>" class="btn btn-success">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Payment Type</th>
+            <th>Banks</th>
+            <th>Status</th>
+            <th width="20%" class="text-center">Action</th>
+        </tr>
+    </tfoot>
+</table>

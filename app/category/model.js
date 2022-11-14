@@ -5,6 +5,6 @@ let categorySchema = mongoose.Schema({
         type: String,
         require: [true, "category name not be empty!!"]
     }
-});
+}, { timestamps: true});
 
 module.exports = mongoose.model('Category', categorySchema);

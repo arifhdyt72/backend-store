@@ -13,7 +13,7 @@ const dashboardRouter = require('./app/dashboard/router.js');
 const voucherRouter = require('./app/voucher/router');
 const bankRouter = require('./app/bank/router');
 const paymentRouter = require('./app/payment/router');
-
+const usersRouter = require('./app/users/router');
 
 var app = express();
 
@@ -37,7 +37,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/adminlte', express.static(path.join(__dirname, '/node_modules/admin-lte/')));
 
-app.use('/', dashboardRouter);
+app.use('/', usersRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/category', categoryRouter);
 app.use('/price', priceRouter);
 app.use('/voucher', voucherRouter);

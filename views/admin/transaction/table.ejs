@@ -50,13 +50,13 @@
                         </form>
                         <form style="display: inline-block;" action="/transaction/status/<%= transaction[i]._id %>?status=success&_method=PUT" method="post">
                             <button class="btn btn-primary btn-sm">
-                                <i class="fas fa-check"></i> Approve
+                                <i class="fas fa-check-circle"></i> Approve
                             </button>
                         </form>
                     <% }else if(transaction[i].status === 'failed'){ %>
                         <form style="display: inline-block;" action="/transaction/status/<%= transaction[i]._id %>?status=success&_method=PUT" method="post">
                             <button class="btn btn-primary btn-sm">
-                                <i class="fas fa-check"></i> Approve
+                                <i class="fas fa-check-circle"></i> Approve
                             </button>
                         </form>
                     <% } %>

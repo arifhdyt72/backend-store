@@ -95,7 +95,7 @@ module.exports = {
         }catch(err){
             req.flash('alertMessage', `${err.message}`);
             req.flash('alertStatus', 'danger');
-            res.redirect('/price');
+            res.redirect('/voucher');
         }
     },
     actionEdit: async(req, res) => {

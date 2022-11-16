@@ -1,0 +1,113 @@
+<%- include ../../partials/header.ejs %>
+<%- include ../../partials/navbar.ejs %>
+<%- include ../../partials/sidebar.ejs %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Player</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/player">Player</a></li>
+                        <li class="breadcrumb-item active">Add Player</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                          <h3 class="card-title">Form input player</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form action="/player/create" method="post" enctype="multipart/form-data">
+                          <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" class="form-control" name="name" id="name" placeholder="Input Name" required />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="username">Username</label>
+                                        <input type="text" class="form-control" name="username" id="username" placeholder="Input Username" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="Input Email" required />
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="phoneNumber">Phone Number</label>
+                                        <input type="tel" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Input Phone Number" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="avatar">Avatar</label>
+                                        <input type="file" class="form-control" name="avatar" id="avatar" placeholder="Input Avatar" />
+                                        <br>
+                                        <img src="" id="image-preview" />
+                                    </div>
+                                </div>
+                            </div>
+                          <!-- /.card-body -->
+                          <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                          </div>
+                        </form>
+                      </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+        <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<%- include ../../partials/footer.ejs %>
+<%- include ../../partials/js.ejs %>
+
+<script>
+    function readUrl(input){
+        if(input.files && input.files[0]){
+            const reader = new FileReader();
+            
+            reader.onload = function(e){
+                $('#image-preview').attr('src', e.target.result);
+                $('#image-preview').attr('width', '20%');
+                $('#image-preview').attr('height', '20%');
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('#avatar').change(function(){
+        readUrl(this);
+    });
+</script>

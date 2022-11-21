@@ -1,0 +1,65 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Avatar</th>
+            <th width="28%" class="text-center">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(let i = 0; i < player.length; i++){ %>
+            <tr>
+                <td><%= i + 1 %></td>
+                <td><%= player[i]?.name ?? '-' %></td>
+                <td><%= player[i]?.username ?? '-' %></td>
+                <td><%= player[i]?.email ?? '-' %></td>
+                <td>
+                    <% if(player[i].status === 'Y'){ %>
+                        <span class="badge badge-success">Active</span>
+                    <% }else { %>
+                        <span class="badge badge-danger">Inactive</span>
+                    <%} %>
+                </td>
+                <td>
+                    <img src="/uploads/avatar/<%= player[i].avatar %>" alt="Avatar" width="50" height="50" />
+                </td>
+                <td>
+                    <form action="/player/status/<%= player[i]._id %>?_method=PUT" method="post" style="display: inline-block;">
+                        <% if(player[i].status === 'Y'){ %>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fas fa-times-circle"></i> Inactive
+                            </button>
+                        <% }else { %>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fas fa-check-circle"></i> Active
+                            </button>
+                        <%} %>
+                    </form>
+                    <a href="/player/edit/<%= player[i]._id %>" class="btn btn-success btn-sm">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                    <form style="display: inline-block;" action="/player/delete/<%= player[i]._id %>?_method=DELETE" method="post">
+                        <button class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th width="5%">NO</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Avatar</th>
+            <th width="20%" class="text-center">Action</th>
+        </tr>
+    </tfoot>
+</table>

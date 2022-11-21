@@ -1,7 +1,11 @@
 const Player = require('./model');
+const Voucher = require('../voucher/model');
 const path = require('path');
 const fs = require('fs');
 const config = require('../../config');
+const bcrypt = require('bcryptjs');
+
+const HASH_ROUND = 10;
 
 module.exports = {
     index: async(req, res) => {
@@ -36,7 +40,7 @@ module.exports = {
     },
     actionCreate: async(req, res) => {
         try{
-            const { name, username, email, phoneNumber } = req.body;
+            const payload = req.body;
             if(req.file){
                 let tmp_path = req.file.path;
                 let originExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
@@ -50,12 +54,7 @@ module.exports = {
 
                 src.on('end', async() => {
                     try{
-                        const player = new Player({
-                            name,
-                            username,
-                            email,
-                            avatar: filename
-                        });
+                        const player = new Player({ ...payload, avatar: filename});
 
                         await player.save();
 
@@ -70,11 +69,7 @@ module.exports = {
                     }
                 });
             }else{
-                const player = new Player({
-                    name,
-                    username,
-                    email
-                });
+                const player = new Player({ ...payload });
 
                 await player.save();
 
@@ -89,56 +84,138 @@ module.exports = {
             res.redirect('/player');
         }
     },
-    // actionEdit: async(req, res) => {
-    //     try{
-    //         const { id } = req.params;
-    //         let priceData = await Price.findOne({ _id: id });
-    //         res.render('admin/price/edit',{
-    //             priceData,
-    //             name: req.session.user.name,
-    //             title: 'Edit Price Page'
-    //         });
-    //     }catch(err){
-    //         req.flash('alertMessage', `${err.message}`);
-    //         req.flash('alertStatus', 'danger');
-    //         res.redirect('/price');
-    //     }
-    // },
-    // actionUpdate: async(req, res) => {
-    //     try{
-    //         const { id } = req.params;
-    //         const { coinName, coinQuantity, price } = req.body;
-    //         await Price.findOneAndUpdate({
-    //             _id: id
-    //         },{
-    //             coinQuantity: coinQuantity,
-    //             coinName: coinName,
-    //             price: price
-    //         });
+    actionEdit: async(req, res) => {
+        try{
+            const { id } = req.params;
+            let player = await Player.findOne({ _id: id });
+            res.render('admin/player/edit',{
+                player,
+                name: req.session.user.name,
+                title: 'Edit Player Page'
+            });
+        }catch(err){
+            req.flash('alertMessage', `${err.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/player');
+        }
+    },
+    actionUpdate: async(req, res) => {
+        try{
+            const { id } = req.params;
+            const payload = req.body;
+            if(req.file){
+                let tmp_path = req.file.path;
+                let originExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
+                let filename = req.file.filename+'.'+originExt;
+                let target_path = path.resolve(config.rootPath, `public/uploads/avatar/${filename}`);
 
-    //         req.flash('alertMessage', 'Price has been updated');
-    //         req.flash('alertStatus', 'success');
+                const src = fs.createReadStream(tmp_path);
+                const dest = fs.createWriteStream(target_path);
 
-    //         res.redirect('/price');
-    //     }catch(err){
-    //         req.flash('alertMessage', `${err.message}`);
-    //         req.flash('alertStatus', 'danger');
-    //         res.redirect('/price');
-    //     }
-    // },
-    // actionDelete: async(req, res) => {
-    //     try{
-    //         const { id } = req.params;
-    //         await Price.findOneAndRemove({ _id: id });
+                src.pipe(dest);
 
-    //         req.flash('alertMessage', 'Price has been deleted');
-    //         req.flash('alertStatus', 'success');
+                src.on('end', async() => {
+                    try{
+                        const player = await Player.findOne({ _id: id });
+                        let currentImage = `${config.rootPath}/public/uploads/avatar/${player.avatar}`;
+                        if(fs.existsSync(currentImage)){
+                            fs.unlinkSync(currentImage);
+                        }
+
+                        if(payload.password === ""){
+                            await Player.findOneAndUpdate({
+                                _id: id
+                            },{
+                                name: payload.name,
+                                username: payload.username,
+                                email: payload.email,
+                                phoneNumber: payload.phoneNumber,
+                                avatar: filename,
+                            });
+                        }else{
+                            payload.password = bcrypt.hashSync(payload.password, HASH_ROUND);
+                            await Player.findOneAndUpdate({
+                                _id: id
+                            },{ ...payload, avatar: filename });
+                        }
+
+                        req.flash('alertMessage', 'Player has been updated');
+                        req.flash('alertStatus', 'success');
             
-    //         res.redirect('/price');
-    //     }catch(err){
-    //         req.flash('alertMessage', `${err.message}`);
-    //         req.flash('alertStatus', 'danger');
-    //         res.redirect('/price');
-    //     }
-    // }
+                        res.redirect('/player');
+                    }catch(err){
+                        req.flash('alertMessage', `${err.message}`);
+                        req.flash('alertStatus', 'danger');
+                        res.redirect('/player');
+                    }
+                });
+            }else{
+                if(payload.password === ""){
+                    await Player.findOneAndUpdate({
+                        _id: id
+                    },{
+                        name: payload.name,
+                        username: payload.username,
+                        email: payload.email,
+                        phoneNumber: payload.phoneNumber,
+                    });
+                }else{
+                    payload.password = bcrypt.hashSync(payload.password, HASH_ROUND);
+                    await Player.findOneAndUpdate({
+                        _id: id
+                    },{ ...payload });
+                }
+
+                req.flash('alertMessage', 'Player has been updated');
+                req.flash('alertStatus', 'success');
+    
+                res.redirect('/player');
+            }
+        }catch(err){
+            req.flash('alertMessage', `${err.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/player');
+        }
+    },
+    actionDelete: async(req, res) => {
+        try{
+            const { id } = req.params;
+            const player = await Player.findOneAndRemove({ _id: id });
+            
+            let currentImage = `${config.rootPath}/public/uploads/avatar/${player.avatar}`;
+            if(fs.existsSync(currentImage)){
+                fs.unlinkSync(currentImage);
+            }
+
+            req.flash('alertMessage', 'Player has been deleted');
+            req.flash('alertStatus', 'success');
+            res.redirect('/player');
+        }catch(err){
+            req.flash('alertMessage', `${err.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/player');
+        }
+    },
+    actionStatus: async(req, res) => {
+        try{
+            const { id } = req.params;
+            let player = await Player.findOne({ _id: id });
+
+            let status = player.status === 'Y' ? 'N' : 'Y';
+            player = await Player.findOneAndUpdate({ 
+                _id: id
+            },{
+                status
+            });
+
+            req.flash('alertMessage', 'Player status has been updated');
+            req.flash('alertStatus', 'success');
+            res.redirect('/player');
+
+        }catch(err){
+            req.flash('alertMessage', `${err.message}`);
+            req.flash('alertStatus', 'danger');
+            res.redirect('/player');
+        }
+    }
 }

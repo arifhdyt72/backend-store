@@ -4,7 +4,6 @@ const Price = require('../price/model');
 const path = require('path');
 const fs = require('fs');
 const config = require('../../config');
-const { use } = require('./router');
 
 module.exports = {
     index: async(req, res) => {

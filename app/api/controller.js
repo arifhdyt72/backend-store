@@ -192,8 +192,9 @@ module.exports = {
         try {
             const { email = "", name = "", username = "", phoneNumber = "" } = req.body;
             const payload = {};
+            let player = await Player.findOne({ _id: req.player.id });
 
-            // if(email.length) payload.email = email;
+            if(email.length && player.email != email) payload.email = email;
             if(name.length) payload.name = name;
             if(username.length) payload.username = username;
             if(phoneNumber.length) payload.phoneNumber = phoneNumber;
@@ -211,7 +212,6 @@ module.exports = {
 
                 src.on('end', async() => {
                     try{
-                        let player = await Player.findOne({ _id: req.player.id });
                         let currentImage = `${config.rootPath}/public/uploads/avatar/${player.avatar}`;
                         if(fs.existsSync(currentImage)){
                             fs.unlinkSync(currentImage);
@@ -247,7 +247,7 @@ module.exports = {
                     }
                 });
             }else{
-                const player = await Player.findOneAndUpdate({
+                player = await Player.findOneAndUpdate({
                     _id: req.player._id,
                 }, payload, {new: true, runValidators: true });
                 
